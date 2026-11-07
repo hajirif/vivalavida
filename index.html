@@ -1,0 +1,448 @@
+
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dolunaydan Alınmış Gözəllik</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 50% 10%, #50577b 0%, transparent 35%),
+    linear-gradient(145deg, #101326, #252b49, #101326);
+  color: #f5e9d5;
+  font-family: 'Lora', serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 25px 12px;
+  overflow-x: hidden;
+}
+
+.stars {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(2px 2px at 20% 30%, #fff 50%, transparent),
+    radial-gradient(1px 1px at 70% 20%, #fff 50%, transparent),
+    radial-gradient(2px 2px at 85% 65%, #fff 50%, transparent),
+    radial-gradient(1px 1px at 35% 80%, #fff 50%, transparent),
+    radial-gradient(2px 2px at 55% 50%, #fff 50%, transparent);
+  background-size: 230px 230px;
+  opacity: .55;
+}
+
+.heading {
+  z-index: 1;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.heading h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(25px, 7vw, 36px);
+  color: #f8dfb7;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.heading p {
+  font-size: 11px;
+  color: #d5c5b0;
+  margin-top: 8px;
+  letter-spacing: 2px;
+}
+
+.book {
+  position: relative;
+  width: min(88vw, 400px);
+  height: min(132vw, 570px);
+  min-height: 440px;
+  max-height: 72vh;
+  perspective: 1800px;
+  z-index: 2;
+}
+
+.page {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 4px 13px 13px 4px;
+  box-shadow: 0 15px 45px #0008;
+  background: #f4e9d9;
+  color: #493d3b;
+}
+
+.content-page {
+  padding: 28px 23px;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(145deg, #fff9ef, #e9d9c7);
+  overflow-y: auto;
+}
+
+.content-page h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  color: #79566c;
+  margin-bottom: 20px;
+}
+
+.content-page p {
+  font-size: clamp(12px, 3.2vw, 14px);
+  line-height: 1.8;
+  white-space: pre-line;
+  text-align: justify;
+}
+
+.signature {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-style: italic;
+  color: #a2677e;
+  margin-top: 22px;
+  text-align: right;
+}
+
+.cover {
+  z-index: 10;
+  transform-origin: left center;
+  transition: transform 1.5s ease;
+  cursor: pointer;
+  backface-visibility: hidden;
+}
+
+.cover.open {
+  transform: rotateY(-165deg);
+  pointer-events: none;
+}
+
+.cover img,
+.back-cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cover-caption {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 35px 20px;
+  text-align: center;
+  background: linear-gradient(transparent 30%, #11182bbd);
+  color: #fff0d7;
+}
+
+.cover-caption h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(30px, 8vw, 40px);
+  line-height: 1.1;
+  text-shadow: 0 2px 12px #000;
+}
+
+.cover-caption p {
+  margin-top: 18px;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+.music-page {
+  gap: 15px;
+  justify-content: center;
+  text-align: center;
+}
+
+.music-page h2 {
+  margin-bottom: 0;
+}
+
+.music-page img {
+  width: 100%;
+  max-height: 185px;
+  object-fit: cover;
+  border-radius: 9px;
+  box-shadow: 0 5px 18px #0003;
+}
+
+.music-page .song-title {
+  text-align: center;
+  font-weight: 500;
+  color: #76516a;
+}
+
+.music-page iframe {
+  width: 100%;
+  height: 165px;
+  border: 0;
+  border-radius: 9px;
+}
+
+.back-cover {
+  display: none;
+  padding: 0;
+  background: #20243d;
+}
+
+.back-cover img {
+  object-fit: cover;
+}
+
+.controls {
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 17px;
+  margin-top: 25px;
+}
+
+button {
+  padding: 11px 22px;
+  border: 1px solid #d7bd91;
+  border-radius: 30px;
+  background: #292d49;
+  color: #f5e9d5;
+  font-family: 'Lora', serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: .3s;
+}
+
+button:active {
+  transform: scale(.95);
+}
+
+button:disabled {
+  opacity: .3;
+  cursor: default;
+}
+
+#pageNumber {
+  font-size: 12px;
+  color: #e8d8c2;
+  min-width: 90px;
+  text-align: center;
+}
+
+.hint {
+  z-index: 2;
+  margin-top: 17px;
+  color: #d4c4b1;
+  font-size: 11px;
+  text-align: center;
+}
+
+@media (max-height: 650px) {
+  .book {
+    height: 68vh;
+    min-height: 390px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="stars"></div>
+
+<header class="heading">
+  <h1>Dolunaydan Alınmış Gözəllik</h1>
+  <p>AY İŞIĞINDA YAZILMIŞ HİSSlər</p>
+</header>
+
+<div class="book">
+
+  <!-- 1. SƏHİFƏ -->
+  <div class="page content-page" id="page1">
+
+    <h2>Düşüncələr...</h2>
+
+    <p>
+Yay ayları bir müddət Ay mənim pəncərəmdə görünürdü və həmin an düşünürdüm öz özümə: Heç Ay sadə olsaydı, sadə parlayan bir cisim kimi görünsəydi, bu qədər qəlbimizə toxunardımı? Cavab verim: yox. Onu bizə sevdirən, cazibədar göstərən, onun loru dildə desək, görünən ləkələridi.
+
+Həmçinin, bir gün bütün problemlərim üst-üstə gələn vaxt Xanbağındakı skamyamda oturmuşdum. Mahnının səsin artırdım, başımı qaldırdım, göyə baxdım, quşları gördüm. Gəlib o başımın üstündəki ağaca qondular. Onlar uçdu, başqaları gəlib qondu: fərqli fərqli quşlar böcəklər.
+
+Düşündüyümdə isə ən gözəl ağaclar budaqlarl enişli çıxışlı olanlar idi. Qüsursuz, hər şeyi düz olan ağac mənə çəkici gəlmədi və bir şeyi fərq elədim, onu sənlə bölüşmək istəyirəm, çox uzatmadan.
+
+Budaqları enişli çıxışlı qüsurlu görünən ağaclar bizə uzaqdan çox çəkici və qüsursuz görünür. Dərinliyinə gedəndə o özlüyündə qüsurludu, biz baxanda yox, amma.
+    </p>
+
+  </div>
+
+  <!-- 2. SƏHİFƏ -->
+  <div class="page content-page" id="page2">
+
+    <h2>Hər şeyə rəğmən...</h2>
+
+    <p>
+Həmçinin, illərlə üstünə qonan böcəklərə, üstündə yuva quran quşlara, yuvasın dağıdıb gedən quşlara, gəlib anlıq gedən quşlara, böcəklərə aldırmadan böyüməyə və gözəl görünməyə davam edirlər.
+
+Ay’a gəldikdə isə, o onun üçün qüsurlu olan ləkələri elmdə buna “maria” deyirlər, amma bizə görünən ləkədi. Hər nəysə, əslində qüsurlu olduğunu düşünüb ona elə sevgiylə baxılmamalıdı, elə? Amma hərkəs aşiqdi Ay’ın o parlamasına, özü də Dolunay dediyimiz o anda daha çox parlayıb gözümüzə sanki yeridir ki, o qüsurlarıyla necə də parlaqdır, necə də möhtəşəmdir.
+
+Eynən sənin kimi, bu yaşına qədər enişi çıxışlı olan budaqların böyüməyə, gələn gedən quşlara, böcəklərə aldırış etmədən böyüsün. Sənin gecədən alınmış tenin, saçların və o dolunay kimi parlaq gözlərin bütün ləkə kimi gördüyün hər şeyə rəğmən parlamağa davam etsin, hamının gözünə yerisin.
+
+Hər zaman gecən aydınlasın və sabahlarını xoş xəbər açsın. Hərkəsin gərgin olub, qaşlarını çatıb, bir-birinin paxıllığını çəkdiyi üçün bir birinə baxmamaq üçün başını yerdən qaldırılmadığı bu dönəmdə, ruhunla gülümsəyib səmaya baxmağı unutma.
+
+Sənin qəlbinə,ruhuna hüzur, xoşbəxtlik arzulayıram. Ay’ı Günəş aydınlata bilər, amma sənin parlamaq üçün heç kimə və heçnəyə ehtiyacın yoxdu.
+
+Hər şeyə rəğmən səmaya baxıb gülümsə, hər zaman parlamağa davam et. Unutma, səni qüsursuz edən qüsurlara, enişlərə və çıxışlara rəğmən parlamağındı.
+    </p>
+
+    <div class="signature">Sevgilərlə 🌹</div>
+
+  </div>
+
+  <!-- 3. COLDPLAY SƏHİFƏSİ -->
+  <div class="page content-page music-page" id="page3">
+
+    <h2>Hər nə olsa da Viva La Vida ✨</h2>
+
+    <img src="./coldplay.jpg" alt="Coldplay">
+
+    <p class="song-title">Coldplay — Viva La Vida</p>
+
+    <iframe
+      src="https://www.youtube-nocookie.com/embed/dvgZkm1xWPE"
+      title="Coldplay - Viva La Vida"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen>
+    </iframe>
+
+  </div>
+
+  <!-- 4. ARXA ÜZ QABIĞI -->
+  <div class="page back-cover" id="page4">
+    <img src="./cover-back.jpg" alt="Arxa üz qabığı">
+  </div>
+
+  <!-- ÖN ÜZ QABIĞI -->
+  <div class="page cover" id="frontCover" onclick="openBook()">
+
+    <img src="./cover-front.jpg" alt="Ön üz qabığı">
+
+    <div class="cover-caption">
+      <h2>Dolunaydan Alınmış Gözəllik</h2>
+      <p>Açmaq üçün toxun ✨</p>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- DÜYMƏLƏR -->
+<div class="controls">
+
+  <button id="prevBtn" onclick="changePage(-1)" disabled>
+    ← Geri
+  </button>
+
+  <span id="pageNumber">Üz qabığı</span>
+
+  <button id="nextBtn" onclick="changePage(1)">
+    İrəli →
+  </button>
+
+</div>
+
+<p class="hint">
+  Səhifələri çevirmək üçün düymələrə toxun ✨
+</p>
+
+<script>
+let currentPage = 0;
+
+const totalPages = 4;
+
+const cover = document.getElementById('frontCover');
+const pageNumber = document.getElementById('pageNumber');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+
+function openBook() {
+
+  if (currentPage !== 0) return;
+
+  currentPage = 1;
+
+  cover.classList.add('open');
+
+  updateBook();
+}
+
+function changePage(direction) {
+
+  const next = currentPage + direction;
+
+  if (next < 0 || next > totalPages) return;
+
+  if (currentPage === 0 && direction === 1) {
+    openBook();
+    return;
+  }
+
+  if (next === 0) {
+    cover.classList.remove('open');
+  }
+
+  currentPage = next;
+
+  updateBook();
+}
+
+function updateBook() {
+
+  for (let i = 1; i <= totalPages; i++) {
+
+    const page = document.getElementById('page' + i);
+
+    page.style.display =
+      i === currentPage ? 'flex' : 'none';
+
+  }
+
+  if (currentPage === 0) {
+
+    pageNumber.textContent = 'Üz qabığı';
+
+  } else if (currentPage === totalPages) {
+
+    pageNumber.textContent = 'Arxa üz qabığı';
+
+  } else {
+
+    pageNumber.textContent =
+      currentPage + ' / ' + totalPages;
+
+  }
+
+  prevBtn.disabled = currentPage === 0;
+
+  nextBtn.disabled = currentPage === totalPages;
+
+}
+
+updateBook();
+</script>
+
+</body>
+</html>
